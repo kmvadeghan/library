@@ -15,65 +15,6 @@ function normalize(text) {
         .toLowerCase();
 }
 
-Papa.parse(CSV_URL, {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: function(res) {
-
-        books = res.data.map(row => ({
-            title: row["عنوان"] || "",
-            author: row["نویسنده"] || "",
-            translator: row["مترجم"] || "",
-            reg: row["شماره ثبت"] || ""
-        }));
-
-    }
-});
-
-function show(list){
-
-    results.innerHTML = "";
-    count.textContent = `تعداد نتایج: ${list.length}`;
-
-    list.forEach(book => {
-
-        results.innerHTML += `
-            <div class="book">
-                <h3>${book.title}</h3>
-                <p>نویسنده: ${book.author}</p>
-                <p>مترجم: ${book.translator}</p>
-                <p>شماره ثبت: ${book.reg}</p>
-            </div>
-        `;
-
-    });
-
-}
-
-search.addEventListener("input", function(){
-
-    const q = normalize(this.value);
-
-    if(q === ""){
-        results.innerHTML = "";
-        count.textContent = "";
-        return;
-    }
-
-    const filtered = books.filter(book =>
-
-        normalize(book.title).includes(q) ||
-        normalize(book.author).includes(q) ||
-        normalize(book.translator).includes(q) ||
-        normalize(book.reg).includes(q)
-
-    );
-
-    show(filtered);
-
-});}
-
 fetch(CSV_URL)
 .then(r => r.text())
 .then(text => {
@@ -95,25 +36,72 @@ fetch(CSV_URL)
 
 });
 
-search.addEventListener("input", function () {
+function show(list){
+
+    results.innerHTML = "";
+
+    count.textContent = `تعداد نتایج: ${list.length}`;
+
+    if(list.length===0){
+
+        results.innerHTML="<p>نتیجه‌ای پیدا نشد.</p>";
+        return;
+
+    }
+
+    list.forEach(book=>{
+
+        results.innerHTML += `
+        <div class="book">
+            <h3>${book.title}</h3>
+            <p><b>نویسنده:</b> ${book.author}</p>
+            <p><b>مترجم:</b> ${book.translator}</p>
+            <p><b>شماره ثبت:</b> ${book.reg}</p>
+        </div>`;
+    });
+
+}
+
+search.addEventListener("input",function(){
 
     const q = normalize(this.value);
 
-    if(q===""){
-        results.innerHTML="";
-        count.innerHTML="";
+    if(q.length < 4){
+
+        results.innerHTML = "";
+        count.textContent = "حداقل ۴ حرف وارد کنید";
         return;
+
     }
 
-    const filtered = books.filter(book =>
+    const filtered = books.filter(book=>{
 
-        normalize(book.title).includes(q) ||
-        normalize(book.author).includes(q) ||
-        normalize(book.translator).includes(q) ||
-        normalize(book.reg).includes(q)
+        const t = normalize(book.title);
+        const a = normalize(book.author);
+        const tr = normalize(book.translator);
+        const r = normalize(book.reg);
 
-    );
+        return (
+            t.includes(q) ||
+            a.includes(q) ||
+            tr.includes(q) ||
+            r.includes(q)
+        );
 
-    show(filtered);
+    });
+
+    filtered.sort((x,y)=>{
+
+        const xt = normalize(x.title);
+        const yt = normalize(y.title);
+
+        if(xt.startsWith(q) && !yt.startsWith(q)) return -1;
+        if(!xt.startsWith(q) && yt.startsWith(q)) return 1;
+
+        return xt.localeCompare(yt,"fa");
+
+    });
+
+    show(filtered.slice(0,10));
 
 });
