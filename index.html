@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>جستجوی کتابخانه</title>
 
-<link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>کتابخانه عمومی مهدیه وادقان</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- کتابخانه حرفه‌ای برای خواندن CSV -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>📚 کتابخانه عمومی مهدیه وادقان</h1>
+    <h1>📚 کتابخانه عمومی مهدیه وادقان</h1>
 
-<input
-id="search"
-type="text"
-placeholder="عنوان، نویسنده، مترجم یا شماره ثبت..."
->
+    <input
+        id="search"
+        type="search"
+        placeholder="نام کتاب، نویسنده، مترجم یا شماره ثبت..."
+        autocomplete="off"
+    >
 
-<div id="count"></div>
+    <div id="count"></div>
 
-<div id="results"></div>
+    <div id="results"></div>
 
 </div>
 
