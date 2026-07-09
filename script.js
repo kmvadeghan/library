@@ -1,4 +1,4 @@
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSMUqn0mNp372-bQKHa5uLhVQT_Jz9ePiriX6KqrdokS1IZZP3IbjqWiBBybvkx9fLFfdZWHaSbz2dQ/pub?output=csv";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTbC5aUZfh3ADxZKqsa1U0oorUkwa23hQ2lXRQNv-VqAGF33xZ6aHazS6zLttZOrS53xkvZlU7eaW1q/pub?output=csv";
 
 const search = document.getElementById("search");
 const results = document.getElementById("results");
@@ -15,26 +15,64 @@ function normalize(text) {
         .toLowerCase();
 }
 
-function show(list) {
+Papa.parse(CSV_URL, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: function(res) {
 
-    count.textContent = "تعداد نتایج: " + list.length;
+        books = res.data.map(row => ({
+            title: row["عنوان"] || "",
+            author: row["نویسنده"] || "",
+            translator: row["مترجم"] || "",
+            reg: row["شماره ثبت"] || ""
+        }));
+
+    }
+});
+
+function show(list){
 
     results.innerHTML = "";
+    count.textContent = `تعداد نتایج: ${list.length}`;
 
     list.forEach(book => {
 
         results.innerHTML += `
-        <div class="book">
-            <h3>${book.title}</h3>
-            <p><b>نویسنده:</b> ${book.author}</p>
-            <p><b>مترجم:</b> ${book.translator}</p>
-            <p><b>شماره ثبت:</b> ${book.reg}</p>
-        </div>
+            <div class="book">
+                <h3>${book.title}</h3>
+                <p>نویسنده: ${book.author}</p>
+                <p>مترجم: ${book.translator}</p>
+                <p>شماره ثبت: ${book.reg}</p>
+            </div>
         `;
 
     });
 
 }
+
+search.addEventListener("input", function(){
+
+    const q = normalize(this.value);
+
+    if(q === ""){
+        results.innerHTML = "";
+        count.textContent = "";
+        return;
+    }
+
+    const filtered = books.filter(book =>
+
+        normalize(book.title).includes(q) ||
+        normalize(book.author).includes(q) ||
+        normalize(book.translator).includes(q) ||
+        normalize(book.reg).includes(q)
+
+    );
+
+    show(filtered);
+
+});}
 
 fetch(CSV_URL)
 .then(r => r.text())
