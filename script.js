@@ -61,47 +61,66 @@ function show(list){
     });
 
 }
+function startsWithWord(text, q) {
+    return normalize(text)
+        .split(/\s+/)
+        .some(word => word.startsWith(q));
+}
 
-search.addEventListener("input",function(){
+search.addEventListener("input", function () {
 
     const q = normalize(this.value);
 
-    if(q.length < 4){
-
+    if (q.length < 4) {
         results.innerHTML = "";
         count.textContent = "حداقل ۴ حرف وارد کنید";
         return;
-
     }
 
-    const filtered = books.filter(book=>{
+    let filtered = [];
 
-        const t = normalize(book.title);
-        const a = normalize(book.author);
-        const tr = normalize(book.translator);
-        const r = normalize(book.reg);
+    // 1- عنوان دقیق
+    filtered = books.filter(book =>
+        normalize(book.title) === q
+    );
 
-        return (
-            t.includes(q) ||
-            a.includes(q) ||
-            tr.includes(q) ||
-            r.includes(q)
+    // 2- شروع عنوان
+    if (filtered.length === 0) {
+        filtered = books.filter(book =>
+            normalize(book.title).startsWith(q)
         );
+    }
 
-    });
+    // 3- شروع یکی از کلمات عنوان
+    if (filtered.length === 0) {
+        filtered = books.filter(book =>
+            startsWithWord(book.title, q)
+        );
+    }
 
-    filtered.sort((x,y)=>{
+    // 4- نویسنده
+    if (filtered.length === 0) {
+        filtered = books.filter(book =>
+            startsWithWord(book.author, q)
+        );
+    }
 
-        const xt = normalize(x.title);
-        const yt = normalize(y.title);
+    // 5- مترجم
+    if (filtered.length === 0) {
+        filtered = books.filter(book =>
+            startsWithWord(book.translator, q)
+        );
+    }
 
-        if(xt.startsWith(q) && !yt.startsWith(q)) return -1;
-        if(!xt.startsWith(q) && yt.startsWith(q)) return 1;
+    // 6- شماره ثبت
+    if (filtered.length === 0) {
+        filtered = books.filter(book =>
+            normalize(book.reg).startsWith(q)
+        );
+    }
 
-        return xt.localeCompare(yt,"fa");
+    count.textContent = `تعداد نتایج: ${filtered.length}`;
 
-    });
-
-    show(filtered.slice(0,10));
+    show(filtered.slice(0, 5));
 
 });
