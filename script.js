@@ -6,42 +6,29 @@ const count = document.getElementById("count");
 
 let books = [];
 
-fetch(CSV_URL)
-  .then(res => res.text())
-  .then(text => {
+function normalize(text) {
+    return (text || "")
+        .replace(/ي/g, "ی")
+        .replace(/ك/g, "ک")
+        .replace(/\u200c/g, "")
+        .trim()
+        .toLowerCase();
+}
 
-    const rows = text.trim().split("\n");
+function show(list) {
 
-    const headers = rows[0].split(",");
+    count.textContent = "تعداد نتایج: " + list.length;
 
-    books = rows.slice(1).map(row => {
-      const cols = row.split(",");
+    results.innerHTML = "";
 
-      return {
-        title: cols[0] || "",
-        author: cols[1] || "",
-        translator: cols[2] || "",
-        reg: cols[3] || ""
-      };
-    });
+    list.forEach(book => {
 
-    show(books);
-  });
-
-function show(list){
-
-    count.innerHTML="تعداد نتایج: "+list.length;
-
-    results.innerHTML="";
-
-    list.forEach(book=>{
-
-        results.innerHTML+=`
+        results.innerHTML += `
         <div class="book">
             <h3>${book.title}</h3>
-            <p>نویسنده: ${book.author}</p>
-            <p>مترجم: ${book.translator}</p>
-            <p>شماره ثبت: ${book.reg}</p>
+            <p><b>نویسنده:</b> ${book.author}</p>
+            <p><b>مترجم:</b> ${book.translator}</p>
+            <p><b>شماره ثبت:</b> ${book.reg}</p>
         </div>
         `;
 
@@ -49,16 +36,43 @@ function show(list){
 
 }
 
-search.addEventListener("input",function(){
+fetch(CSV_URL)
+.then(r => r.text())
+.then(text => {
 
-    const q=this.value.trim();
+    const rows = text.trim().split("\n");
 
-    const filtered=books.filter(b=>
+    books = rows.slice(1).map(row => {
 
-        b.title.includes(q)||
-        b.author.includes(q)||
-        b.translator.includes(q)||
-        b.reg.includes(q)
+        const c = row.split(",");
+
+        return {
+            title: c[0] || "",
+            author: c[1] || "",
+            translator: c[2] || "",
+            reg: c[3] || ""
+        };
+
+    });
+
+});
+
+search.addEventListener("input", function () {
+
+    const q = normalize(this.value);
+
+    if(q===""){
+        results.innerHTML="";
+        count.innerHTML="";
+        return;
+    }
+
+    const filtered = books.filter(book =>
+
+        normalize(book.title).includes(q) ||
+        normalize(book.author).includes(q) ||
+        normalize(book.translator).includes(q) ||
+        normalize(book.reg).includes(q)
 
     );
 
