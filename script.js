@@ -1,4 +1,4 @@
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTbC5aUZfh3ADxZKqsa1U0oorUkwa23hQ2lXRQNv-VqAGF33xZ6aHazS6zLttZOrS53xkvZlU7eaW1q/pub?output=csv";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSMUqn0mNp372-bQKHa5uLhVQT_Jz9ePiriX6KqrdokS1IZZP3IbjqWiBBybvkx9fLFfdZWHaSbz2dQ/pub?output=csv";
 
 const search = document.getElementById("search");
 const results = document.getElementById("results");
