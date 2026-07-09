@@ -105,6 +105,6 @@ search.addEventListener("input",function(){
 
     });
 
-    show(filtered.slice(0,10));
+    show(filtered.slice(0,20));
 
 });
