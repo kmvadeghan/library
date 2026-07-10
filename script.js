@@ -108,10 +108,3 @@ search.addEventListener("input",function(){
     show(filtered.slice(0,20));
 
 });
-.logo{
-    width:30px;
-    height:30px;
-    display:block;
-    margin:20px auto 10px;
-    object-fit:contain;
-}
