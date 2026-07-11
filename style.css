@@ -112,16 +112,20 @@ mark{
     border-radius:3px;
 }
 
-.about-btn{
-    width:100%;
-    margin:15px 0;
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    background:#00695c;
-    color:white;
-    font-size:16px;
+.top-bar{
+    text-align:left;
+    margin-bottom:10px;
+}
+
+.about-link{
+    color:#00695c;
+    font-size:14px;
     cursor:pointer;
+    font-weight:bold;
+}
+
+.about-link:hover{
+    text-decoration:underline;
 }
 
 .modal{
