@@ -111,3 +111,45 @@ mark{
     padding:2px 4px;
     border-radius:3px;
 }
+
+.about-btn{
+    width:100%;
+    margin:15px 0;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#00695c;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    top:0;
+    right:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.5);
+    z-index:999;
+}
+
+.modal-content{
+    background:white;
+    width:90%;
+    max-width:500px;
+    margin:10% auto;
+    padding:20px;
+    border-radius:12px;
+    line-height:2;
+    position:relative;
+}
+
+.close{
+    position:absolute;
+    left:15px;
+    top:10px;
+    font-size:28px;
+    cursor:pointer;
+}
