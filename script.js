@@ -86,7 +86,7 @@ function show(list,total){
     }
 
 }
-
+search.addEventListener("input", function () {
     const q = normalize(this.value);
 
 if(q.length < 4){
