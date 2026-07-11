@@ -3,6 +3,7 @@ const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVPSl0RN8A4Nwn
 const search = document.getElementById("search");
 const results = document.getElementById("results");
 const count = document.getElementById("count");
+const searchInfo = document.getElementById("searchInfo");
 
 let books = [];
 
@@ -34,17 +35,26 @@ fetch(CSV_URL)
 
     });
 
+    count.innerHTML = `📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
+
+
 });
 
 function show(list){
 
-    results.innerHTML = "";
+    results.innerHTML="";
 
-    count.textContent = `تعداد نتایج: ${list.length}`;
+    count.innerHTML=`📖 ${list.length} کتاب یافت شد.`;
 
     if(list.length===0){
 
-        results.innerHTML="<p>نتیجه‌ای پیدا نشد.</p>";
+        searchInfo.style.display="none";
+
+        results.innerHTML=`
+        <div class="book">
+        ❌ کتابی با این مشخصات پیدا نشد.
+        </div>`;
+
         return;
 
     }
@@ -58,21 +68,41 @@ function show(list){
             <p><b>مترجم:</b> ${book.translator}</p>
             <p><b>شماره ثبت:</b> ${book.reg}</p>
         </div>`;
+
     });
+
+    if(list.length>=20){
+
+        searchInfo.style.display="block";
+
+        searchInfo.innerHTML=
+        `فقط ۲۰ نتیجه اول نمایش داده شده است.
+        برای مشاهده نتایج دقیق‌تر، عبارت کامل‌تر یا دقیق‌تری جستجو کنید.`;
+
+    }else{
+
+        searchInfo.style.display="none";
+
+    }
 
 }
 
-search.addEventListener("input",function(){
-
     const q = normalize(this.value);
 
-    if(q.length < 4){
+if(q.length < 4){
 
-        results.innerHTML = "";
-        count.textContent = "حداقل ۴ حرف وارد کنید";
-        return;
+    results.innerHTML="";
 
-    }
+    count.innerHTML=`📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
+
+    searchInfo.style.display="block";
+
+    searchInfo.innerHTML=
+    "برای جستجو حداقل ۴ حرف از عنوان، نویسنده، مترجم یا شماره ثبت را وارد کنید.";
+
+    return;
+
+}
 
     const filtered = books.filter(book=>{
 
