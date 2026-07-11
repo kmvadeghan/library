@@ -99,7 +99,9 @@ if(q.length < 4){
 
     searchInfo.innerHTML=
     "برای جستجو حداقل ۴ حرف از عنوان، نویسنده، مترجم یا شماره ثبت را وارد کنید.";
-
+    
+searchInfo.style.display = "block";
+    
     return;
 
 }
