@@ -140,3 +140,21 @@ searchInfo.style.display = "block";
     show(filtered.slice(0,20), filtered.length);
 
 });
+
+const aboutBtn = document.getElementById("aboutBtn");
+const aboutModal = document.getElementById("aboutModal");
+const closeModal = document.getElementById("closeModal");
+
+aboutBtn.onclick = () => {
+    aboutModal.style.display = "block";
+};
+
+closeModal.onclick = () => {
+    aboutModal.style.display = "none";
+};
+
+window.onclick = (e) => {
+    if (e.target === aboutModal) {
+        aboutModal.style.display = "none";
+    }
+};
