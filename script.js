@@ -40,19 +40,19 @@ fetch(CSV_URL)
 
 });
 
-function show(list){
+function show(list,total){
 
     results.innerHTML="";
 
-    count.innerHTML=`📖 ${list.length} کتاب یافت شد.`;
+    count.innerHTML=`📖 <b>${total}</b> کتاب یافت شد.`;
 
-    if(list.length===0){
+    if(total===0){
 
         searchInfo.style.display="none";
 
         results.innerHTML=`
         <div class="book">
-        ❌ کتابی با این مشخصات پیدا نشد.
+            ❌ کتابی با این مشخصات پیدا نشد.
         </div>`;
 
         return;
@@ -71,13 +71,13 @@ function show(list){
 
     });
 
-    if(list.length>=20){
+    if(total>20){
 
         searchInfo.style.display="block";
 
         searchInfo.innerHTML=
-        `فقط ۲۰ نتیجه اول نمایش داده شده است.
-        برای مشاهده نتایج دقیق‌تر، عبارت کامل‌تر یا دقیق‌تری جستجو کنید.`;
+        `📄 فقط <b>20</b> نتیجه از مجموع <b>${total}</b> نتیجه نمایش داده شده است.<br>
+        برای رسیدن به کتاب موردنظر، عبارت دقیق‌تر یا کامل‌تری جستجو کنید.`;
 
     }else{
 
@@ -135,6 +135,6 @@ if(q.length < 4){
 
     });
 
-    show(filtered.slice(0,20));
+    show(filtered.slice(0,20), filtered.length);
 
 });
