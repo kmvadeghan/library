@@ -28,28 +28,28 @@ fetch(CSV_URL)
         return response.text();
 
     })
-
     .then(text => {
 
         Papa.parse(text, {
 
-            header: true,
-
             skipEmptyLines: true,
 
-            complete: function (result) {
+            complete: function(result) {
 
-                books = result.data.map(row => ({
+                const rows = result.data;
 
-                    title: row["title"] || row["عنوان"] || "",
+                books = rows.slice(1).map(row => {
 
-                    author: row["author"] || row["نویسنده"] || "",
+                    return {
 
-                    translator: row["translator"] || row["مترجم"] || "",
+                        title: row[0] || "",
+                        author: row[1] || "",
+                        translator: row[2] || "",
+                        reg: row[3] || ""
 
-                    reg: row["reg"] || row["شماره ثبت"] || ""
+                    };
 
-                }));
+                });
 
                 count.innerHTML =
                     `📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
@@ -59,18 +59,12 @@ fetch(CSV_URL)
         });
 
     })
-
     .catch(() => {
 
-        count.innerHTML = "❌ خطا در دریافت اطلاعات کتابخانه.";
-
-        searchInfo.style.display = "block";
-
-        searchInfo.innerHTML =
-            "اتصال اینترنت یا لینک Google Sheet را بررسی کنید.";
+        count.innerHTML =
+            "❌ خطا در دریافت اطلاعات کتابخانه.";
 
     });
-
 
 
 // ---------- نمایش نتایج ----------
