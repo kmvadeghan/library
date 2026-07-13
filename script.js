@@ -16,97 +16,175 @@ function normalize(text) {
         .toLowerCase();
 }
 
+// ---------- دریافت اطلاعات ----------
+
 fetch(CSV_URL)
-.then(r => r.text())
-.then(text => {
+    .then(response => {
 
-    const rows = text.trim().split("\n");
+        if (!response.ok) {
+            throw new Error("خطا در دریافت اطلاعات");
+        }
 
-    books = rows.slice(1).map(row => {
+        return response.text();
 
-        const c = row.split(",");
+    })
 
-        return {
-            title: c[0] || "",
-            author: c[1] || "",
-            translator: c[2] || "",
-            reg: c[3] || ""
-        };
+    .then(text => {
+
+        Papa.parse(text, {
+
+            header: true,
+
+            skipEmptyLines: true,
+
+            complete: function (result) {
+
+                books = result.data.map(row => ({
+
+                    title: row["title"] || row["عنوان"] || "",
+
+                    author: row["author"] || row["نویسنده"] || "",
+
+                    translator: row["translator"] || row["مترجم"] || "",
+
+                    reg: row["reg"] || row["شماره ثبت"] || ""
+
+                }));
+
+                count.innerHTML =
+                    `📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
+
+            }
+
+        });
+
+    })
+
+    .catch(() => {
+
+        count.innerHTML = "❌ خطا در دریافت اطلاعات کتابخانه.";
+
+        searchInfo.style.display = "block";
+
+        searchInfo.innerHTML =
+            "اتصال اینترنت یا لینک Google Sheet را بررسی کنید.";
 
     });
 
-    count.innerHTML = `📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
 
 
-});
+// ---------- نمایش نتایج ----------
 
-function show(list,total){
+function show(list, total) {
 
-    results.innerHTML="";
+    results.innerHTML = "";
 
-    count.innerHTML=`📖 <b>${total}</b> کتاب یافت شد.`;
+    count.innerHTML =
+        `📖 <b>${total}</b> کتاب یافت شد.`;
 
-    if(total===0){
+    if (total === 0) {
 
-        searchInfo.style.display="none";
+        searchInfo.style.display = "none";
 
-        results.innerHTML=`
-        <div class="book">
-            ❌ کتابی با این مشخصات پیدا نشد.
-        </div>`;
+        const div = document.createElement("div");
+
+        div.className = "book";
+
+        div.textContent =
+            "❌ کتابی با این مشخصات پیدا نشد.";
+
+        results.appendChild(div);
 
         return;
 
     }
 
-    list.forEach(book=>{
+    const fragment = document.createDocumentFragment();
 
-        results.innerHTML += `
-        <div class="book">
-            <h3>${book.title}</h3>
-            <p><b>نویسنده:</b> ${book.author}</p>
-            <p><b>مترجم:</b> ${book.translator}</p>
-            <p><b>شماره ثبت:</b> ${book.reg}</p>
-        </div>`;
+    list.forEach(book => {
+
+        const card = document.createElement("div");
+        card.className = "book";
+
+        const h3 = document.createElement("h3");
+        h3.textContent = book.title;
+
+        const p1 = document.createElement("p");
+        p1.innerHTML = "<b>نویسنده:</b> ";
+
+        const span1 = document.createElement("span");
+        span1.textContent = book.author;
+
+        p1.appendChild(span1);
+
+        const p2 = document.createElement("p");
+        p2.innerHTML = "<b>مترجم:</b> ";
+
+        const span2 = document.createElement("span");
+        span2.textContent = book.translator;
+
+        p2.appendChild(span2);
+
+        const p3 = document.createElement("p");
+        p3.innerHTML = "<b>شماره ثبت:</b> ";
+
+        const span3 = document.createElement("span");
+        span3.textContent = book.reg;
+
+        p3.appendChild(span3);
+
+        card.appendChild(h3);
+        card.appendChild(p1);
+        card.appendChild(p2);
+        card.appendChild(p3);
+
+        fragment.appendChild(card);
 
     });
 
-    if(total>20){
+    results.appendChild(fragment);
 
-        searchInfo.style.display="block";
+    if (total > 20) {
 
-        searchInfo.innerHTML=
-        `📄 فقط <b>20</b> نتیجه از مجموع <b>${total}</b> نتیجه نمایش داده شده است.<br>
-        برای رسیدن به کتاب موردنظر، عبارت دقیق‌تر یا کامل‌تری جستجو کنید.`;
+        searchInfo.style.display = "block";
 
-    }else{
+        searchInfo.innerHTML =
+            `📄 فقط <b>20</b> نتیجه از مجموع <b>${total}</b> نتیجه نمایش داده شده است.<br>
+             برای رسیدن به کتاب موردنظر، عبارت دقیق‌تر یا کامل‌تری جستجو کنید.`;
 
-        searchInfo.style.display="none";
+    } else {
+
+        searchInfo.style.display = "none";
 
     }
 
 }
+
+
+
+// ---------- جستجو ----------
+
 search.addEventListener("input", function () {
+
     const q = normalize(this.value);
 
-if(q.length < 4){
+    if (q.length < 4) {
 
-    results.innerHTML="";
+        results.innerHTML = "";
 
-    count.innerHTML=`📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
+        count.innerHTML =
+            `📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
 
-    searchInfo.style.display="block";
+        searchInfo.style.display = "block";
 
-    searchInfo.innerHTML=
-    "برای جستجو حداقل ۴ حرف از عنوان، نویسنده، مترجم یا شماره ثبت را وارد کنید.";
-    
-searchInfo.style.display = "block";
-    
-    return;
+        searchInfo.innerHTML =
+            "برای جستجو حداقل ۴ حرف از عنوان، نویسنده، مترجم یا شماره ثبت را وارد کنید.";
 
-}
+        return;
 
-    const filtered = books.filter(book=>{
+    }
+
+    const filtered = books.filter(book => {
 
         const t = normalize(book.title);
         const a = normalize(book.author);
@@ -114,47 +192,64 @@ searchInfo.style.display = "block";
         const r = normalize(book.reg);
 
         return (
-    r !== "" &&
-    (
-        t.includes(q) ||
-        a.includes(q) ||
-        tr.includes(q) ||
-        r.includes(q)
-    )
-);
+
+            t.includes(q) ||
+
+            a.includes(q) ||
+
+            tr.includes(q) ||
+
+            r.includes(q)
+
+        );
 
     });
 
-    filtered.sort((x,y)=>{
+    filtered.sort((x, y) => {
 
         const xt = normalize(x.title);
         const yt = normalize(y.title);
 
-        if(xt.startsWith(q) && !yt.startsWith(q)) return -1;
-        if(!xt.startsWith(q) && yt.startsWith(q)) return 1;
+        if (xt.startsWith(q) && !yt.startsWith(q)) return -1;
 
-        return xt.localeCompare(yt,"fa");
+        if (!xt.startsWith(q) && yt.startsWith(q)) return 1;
+
+        return xt.localeCompare(yt, "fa");
 
     });
 
-    show(filtered.slice(0,20), filtered.length);
+    show(filtered.slice(0, 20), filtered.length);
 
 });
 
+
+
+// ---------- پنجره درباره ----------
+
 const aboutBtn = document.getElementById("aboutBtn");
+
 const aboutModal = document.getElementById("aboutModal");
+
 const closeModal = document.getElementById("closeModal");
 
 aboutBtn.onclick = () => {
+
     aboutModal.style.display = "block";
+
 };
 
 closeModal.onclick = () => {
+
     aboutModal.style.display = "none";
+
 };
 
 window.onclick = (e) => {
+
     if (e.target === aboutModal) {
+
         aboutModal.style.display = "none";
+
     }
+
 };
