@@ -9,22 +9,25 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- کتابخانه حرفه‌ای برای خواندن CSV -->
+    <!-- کتابخانه خواندن CSV -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 
 <body>
 
 <div class="container">
-<div class="top-bar">
-    <span id="aboutBtn" class="about-link">ℹ️ درباره کتابخانه</span>
-</div>
-    
-<img src="./1000299843_10296.png" class="logo" alt="لوگوی کتابخانه">
-    
-<h1>کتابخانه عمومی مهدیه وادقان</h1>
 
-<p class="subtitle">جستجو در عنوان، نویسنده، مترجم و شماره ثبت</p>
+    <div class="top-bar">
+        <span id="aboutBtn" class="about-link">ℹ️ درباره کتابخانه</span>
+    </div>
+
+    <img src="./1000299843_10296.png" class="logo" alt="لوگوی کتابخانه">
+
+    <h1>کتابخانه عمومی مهدیه وادقان</h1>
+
+    <p class="subtitle">
+        جستجو در عنوان، نویسنده، مترجم و شماره ثبت
+    </p>
 
     <input
         id="search"
@@ -34,46 +37,62 @@
     >
 
     <div id="count"></div>
+
     <div id="searchInfo"></div>
 
     <div id="results"></div>
 
 </div>
 
+
+<!-- پنجره درباره کتابخانه -->
+
 <div id="aboutModal" class="modal">
 
-  <div class="modal-content">
+    <div class="modal-content">
 
-    <span id="closeModal" class="close">&times;</span>
+        <span id="closeModal" class="close">&times;</span>
 
-    <h2>📚 کتابخانه عمومی مهدیه وادقان</h2>
+        <h2>📚 کتابخانه عمومی مهدیه وادقان</h2>
 
-    <p>
-      کتابخانه عمومی مهدیه وادقان با هدف ترویج فرهنگ مطالعه،
-      ارائه خدمات امانت کتاب و برگزاری فعالیت‌های فرهنگی
-      در خدمت علاقه‌مندان به کتاب و کتاب‌خوانی است.
-    </p>
+        <p>
+            کتابخانه عمومی مهدیه وادقان با هدف ترویج فرهنگ مطالعه،
+            ارائه خدمات امانت کتاب و برگزاری فعالیت‌های فرهنگی
+            در خدمت علاقه‌مندان به کتاب و کتاب‌خوانی است.
+        </p>
 
-    <hr>
+        <hr>
 
-    <p>📖 بیش از 4500 جلد کتاب</p>
+        <p>📖 بیش از ۴۵۰۰ جلد کتاب</p>
 
-    <p>📍 آدرس: کاشان، روستای وادقان، مجتمع مهدیه، طبقه دوم</p>
+        <p>
+            📍 آدرس:
+            کاشان، روستای وادقان،
+            مجتمع مهدیه، طبقه دوم
+        </p>
 
-    <p>🕗 ساعات فعالیت: در تابستان، پنجشنبه ها از ساعت 19 الی 20 و روزهایی که از طریق کانال تلگرام یا ایتا اطلاع رسانی می گردد.</p>
+        <p>
+            🕗 ساعات فعالیت:
+            در تابستان، پنجشنبه‌ها از ساعت ۱۹ تا ۲۰
+            و روزهایی که از طریق کانال تلگرام یا ایتا اطلاع‌رسانی می‌شود.
+        </p>
 
-   <p>📲 تلفن : 03155703400</p>
-         <p>🔍 فضای مجازی و سایت با جستجو Mahdiehvadeghan </p>
+        <p>
+            ☎️ تلفن:
+            03155703400
+        </p>
 
+        <p>
+            🔍 فضای مجازی و سایت با جستجوی
+            Mahdiehvadeghan
+        </p>
 
-  </div>
+    </div>
 
 </div>
-    
-<script src="script.js"></script>
 
-</body>
-</html>
+<!-- فقط یک بار -->
+
 <script src="script.js"></script>
 
 </body>
