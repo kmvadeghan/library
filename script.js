@@ -12,7 +12,6 @@ function normalize(text) {
         .replace(/ي/g, "ی")
         .replace(/ك/g, "ک")
         .replace(/\u200c/g, "")
-        .trim()
         .toLowerCase();
 }
 
@@ -158,11 +157,29 @@ function show(list, total) {
 
 // ---------- جستجو ----------
 
+// ---------- جستجو ----------
+
 search.addEventListener("input", function () {
 
-    const q = normalize(this.value);
+    const raw = this.value;
 
-    if (q.length < 4) {
+    // متن نرمال‌شده بدون حذف فاصله انتهایی
+    const normalized = (raw || "")
+        .replace(/ي/g, "ی")
+        .replace(/ك/g, "ک")
+        .replace(/\u200c/g, "")
+        .toLowerCase();
+
+    // متن واقعی برای جستجو
+    const q = normalized.trim();
+
+    // اگر 4 حرف یا بیشتر باشد، مستقیم جستجو کن
+    // اگر 1 تا 3 حرف باشد، فقط وقتی آخرش Space زده شده باشد
+    const canSearch =
+        q.length >= 4 ||
+        (q.length >= 1 && q.length <= 3 && raw.endsWith(" "));
+
+    if (!canSearch) {
 
         results.innerHTML = "";
 
@@ -172,7 +189,7 @@ search.addEventListener("input", function () {
         searchInfo.style.display = "block";
 
         searchInfo.innerHTML =
-            "برای جستجو حداقل ۴ حرف از عنوان، نویسنده، مترجم یا شماره ثبت را وارد کنید.";
+            "برای جستجوی عبارت‌های کمتر از ۴ حرف، بعد از نوشتن کلمه یک فاصله (Space) وارد کنید.";
 
         return;
 
@@ -215,35 +232,3 @@ search.addEventListener("input", function () {
     show(filtered.slice(0, 20), filtered.length);
 
 });
-
-
-
-// ---------- پنجره درباره ----------
-
-const aboutBtn = document.getElementById("aboutBtn");
-
-const aboutModal = document.getElementById("aboutModal");
-
-const closeModal = document.getElementById("closeModal");
-
-aboutBtn.onclick = () => {
-
-    aboutModal.style.display = "block";
-
-};
-
-closeModal.onclick = () => {
-
-    aboutModal.style.display = "none";
-
-};
-
-window.onclick = (e) => {
-
-    if (e.target === aboutModal) {
-
-        aboutModal.style.display = "none";
-
-    }
-
-};
