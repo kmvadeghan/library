@@ -22,9 +22,7 @@ function normalize(text) {
         .replace(/ي/g, "ی")
         .replace(/ك/g, "ک")
 
-        .replace(/\u200c/g, "")
-
-        .replace(/\s+/g, "")
+       .replace(/\u200c/g, "")
 
         .replace(/أ|إ|آ/g,"ا")
 
@@ -183,11 +181,7 @@ search.addEventListener("input", function () {
     const raw = this.value;
 
     // متن نرمال‌شده بدون حذف فاصله انتهایی
-    const normalized = (raw || "")
-        .replace(/ي/g, "ی")
-        .replace(/ك/g, "ک")
-        .replace(/\u200c/g, "")
-        .toLowerCase();
+    const normalized = normalize(raw);
 
     // متن واقعی برای جستجو
     const q = normalized.trim();
@@ -198,29 +192,7 @@ search.addEventListener("input", function () {
         q.length >= 4 ||
         (q.length >= 1 && q.length <= 3 && raw.endsWith(" "));
 
-    search.addEventListener("input",()=>{
 
-clearBtn.style.display=
-
-search.value ? "block":"none";
-
-});
-    clearBtn.onclick=()=>{
-
-search.value="";
-
-results.innerHTML="";
-
-search.focus();
-
-searchInfo.style.display="none";
-
-count.innerHTML=
-`📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
-
-clearBtn.style.display="none";
-
-};
     if (!canSearch) {
 
         results.innerHTML = "";
@@ -262,19 +234,55 @@ return words.every(word =>
 
     filtered.sort((x, y) => {
 
-        const xt = normalize(x.title);
-        const yt = normalize(y.title);
+       const xt = normalize(x.title);
+const yt = normalize(y.title);
 
-        if (xt.startsWith(q) && !yt.startsWith(q)) return -1;
+const xStarts =
+    xt.startsWith(q) ||
+    normalize(x.author).startsWith(q) ||
+    normalize(x.translator).startsWith(q);
 
-        if (!xt.startsWith(q) && yt.startsWith(q)) return 1;
+const yStarts =
+    yt.startsWith(q) ||
+    normalize(y.author).startsWith(q) ||
+    normalize(y.translator).startsWith(q);
 
-        return collator.compare(xt, yt);
+if (xStarts && !yStarts) return -1;
+
+if (!xStarts && yStarts) return 1;
+
+return collator.compare(xt, yt);
     });
 
     show(filtered.slice(0, 20), filtered.length);
 
 });
+
+// ---------- دکمه پاک کردن ----------
+
+search.addEventListener("input", () => {
+
+    clearBtn.style.display =
+        search.value ? "block" : "none";
+
+});
+
+clearBtn.onclick = () => {
+
+    search.value = "";
+
+    results.innerHTML = "";
+
+    search.focus();
+
+    searchInfo.style.display = "none";
+
+    count.innerHTML =
+        `📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
+
+    clearBtn.style.display = "none";
+
+};
 // ---------- پنجره درباره ----------
 
 const aboutBtn = document.getElementById("aboutBtn");
