@@ -1,5 +1,11 @@
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVPSl0RN8A4Nwn97XEoa_olvZAhjX8LkZPxdjQNHvRr31mJ2E-iGkmHI-d4nuGF9_Mk1f25FZIBaHC/pub?output=csv";
+const collator = new Intl.Collator("fa", {
 
+    sensitivity: "base",
+
+    numeric: true
+
+});
 const search = document.getElementById("search");
 const results = document.getElementById("results");
 const count = document.getElementById("count");
@@ -8,11 +14,22 @@ const searchInfo = document.getElementById("searchInfo");
 let books = [];
 
 function normalize(text) {
+
     return (text || "")
+
         .replace(/ي/g, "ی")
         .replace(/ك/g, "ک")
+
         .replace(/\u200c/g, "")
+
+        .replace(/\s+/g, "")
+
+        .replace(/أ|إ|آ/g,"ا")
+
+        .replace(/ة/g,"ه")
+
         .toLowerCase();
+
 }
 
 // ---------- دریافت اطلاعات ----------
@@ -202,17 +219,19 @@ search.addEventListener("input", function () {
         const tr = normalize(book.translator);
         const r = normalize(book.reg);
 
-        return (
+       const words = q.split(/\s+/);
 
-            t.includes(q) ||
+return words.every(word =>
 
-            a.includes(q) ||
+    t.includes(word) ||
 
-            tr.includes(q) ||
+    a.includes(word) ||
 
-            r.includes(q)
+    tr.includes(word) ||
 
-        );
+    r.includes(word)
+
+);
 
     });
 
@@ -225,8 +244,7 @@ search.addEventListener("input", function () {
 
         if (!xt.startsWith(q) && yt.startsWith(q)) return 1;
 
-        return xt.localeCompare(yt, "fa");
-
+        return collator.compare(xt, yt);
     });
 
     show(filtered.slice(0, 20), filtered.length);
