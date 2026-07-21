@@ -250,3 +250,9 @@ color:#888;
 color:red;
 
 }
+/* مخفی کردن دکمه پیش‌فرض مرورگر */
+
+input[type="search"]::-webkit-search-cancel-button{
+    -webkit-appearance:none;
+    appearance:none;
+}
