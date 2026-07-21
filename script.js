@@ -9,6 +9,8 @@ const collator = new Intl.Collator("fa", {
 const search = document.getElementById("search");
 const results = document.getElementById("results");
 const count = document.getElementById("count");
+const clearBtn =
+document.getElementById("clearBtn");
 const searchInfo = document.getElementById("searchInfo");
 
 let books = [];
@@ -196,6 +198,29 @@ search.addEventListener("input", function () {
         q.length >= 4 ||
         (q.length >= 1 && q.length <= 3 && raw.endsWith(" "));
 
+    search.addEventListener("input",()=>{
+
+clearBtn.style.display=
+
+search.value ? "block":"none";
+
+});
+    clearBtn.onclick=()=>{
+
+search.value="";
+
+results.innerHTML="";
+
+search.focus();
+
+searchInfo.style.display="none";
+
+count.innerHTML=
+`📚 تعداد کل کتاب‌های کتابخانه: <b>${books.length}</b>`;
+
+clearBtn.style.display="none";
+
+};
     if (!canSearch) {
 
         results.innerHTML = "";
