@@ -234,9 +234,14 @@ return words.every(word =>
 
     filtered.sort((x, y) => {
 
-       const xt = normalize(x.title);
+const xt = normalize(x.title);
 const yt = normalize(y.title);
 
+// اول عنوان دقیق
+if (xt === q && yt !== q) return -1;
+if (xt !== q && yt === q) return 1;
+
+// بعد شروع با عبارت
 const xStarts =
     xt.startsWith(q) ||
     normalize(x.author).startsWith(q) ||
@@ -248,9 +253,9 @@ const yStarts =
     normalize(y.translator).startsWith(q);
 
 if (xStarts && !yStarts) return -1;
-
 if (!xStarts && yStarts) return 1;
 
+// در نهایت مرتب‌سازی الفبایی
 return collator.compare(xt, yt);
     });
 
