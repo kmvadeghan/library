@@ -232,32 +232,45 @@ return words.every(word =>
 
     });
 
-    filtered.sort((x, y) => {
+    function score(book){
 
-const xt = normalize(x.title);
-const yt = normalize(y.title);
+    const t = normalize(book.title);
+    const a = normalize(book.author);
+    const tr = normalize(book.translator);
+    const r = normalize(book.reg);
 
-// اول عنوان دقیق
-if (xt === q && yt !== q) return -1;
-if (xt !== q && yt === q) return 1;
+    if (t === q) return 100;
 
-// بعد شروع با عبارت
-const xStarts =
-    xt.startsWith(q) ||
-    normalize(x.author).startsWith(q) ||
-    normalize(x.translator).startsWith(q);
+    if (t.startsWith(q)) return 90;
 
-const yStarts =
-    yt.startsWith(q) ||
-    normalize(y.author).startsWith(q) ||
-    normalize(y.translator).startsWith(q);
+    if (a.startsWith(q)) return 80;
 
-if (xStarts && !yStarts) return -1;
-if (!xStarts && yStarts) return 1;
+    if (tr.startsWith(q)) return 70;
 
-// در نهایت مرتب‌سازی الفبایی
-return collator.compare(xt, yt);
-    });
+    if (t.includes(q)) return 60;
+
+    if (a.includes(q)) return 50;
+
+    if (tr.includes(q)) return 40;
+
+    if (r.includes(q)) return 30;
+
+    return 0;
+
+}
+
+filtered.sort((x,y)=>{
+
+    const diff = score(y)-score(x);
+
+    if(diff!==0) return diff;
+
+    return collator.compare(
+        normalize(x.title),
+        normalize(y.title)
+    );
+
+});
 
     show(filtered.slice(0, 20), filtered.length);
 
